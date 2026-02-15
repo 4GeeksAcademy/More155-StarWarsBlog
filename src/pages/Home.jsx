@@ -1,16 +1,79 @@
-import rigoImageUrl from "../assets/img/rigo-baby.jpg";
+import { useEffect } from "react";
+import { Card } from "../components/Card.jsx";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
+
+{/* Getting some 302 errors from time to time, lack of catch errors or async functions I guess, have to check that out */}
+{/* LearnMore: Already added a catch: error and a spinner when loading */}
+{/* Main issues: Can't fecth on Card to show details on home view, loading slow */}
+{/* What details am I supposed to show for vehicles in Card? And in Learn More for every single one of them */}
+{/* Not sure if I have to do the whole UI interface for the LearnMore view in terms of Bootstrap Card and Details List Component */}
+{/* Add a dropdown with a delete function plus a trash bin icon for the favorites btn */}
 
 export const Home = () => {
 
-  const {store, dispatch} =useGlobalReducer()
+  const { store, dispatch } = useGlobalReducer();
 
-	return (
-		<div className="text-center mt-5">
-			<h1>Hello Rigo!!</h1>
-			<p>
-				<img src={rigoImageUrl} />
-			</p>
-		</div>
-	);
-}; 
+  useEffect(() => {
+
+    fetch("https://www.swapi.tech/api/people")
+      .then(res => res.json())
+      .then(data => {
+        dispatch({
+          type: "SET_PEOPLE",
+          payload: data.results
+        });
+      });
+
+    fetch("https://www.swapi.tech/api/planets")
+      .then(res => res.json())
+      .then(data => {
+        dispatch({
+          type: "SET_PLANETS",
+          payload: data.results
+        });
+      });
+
+    fetch("https://www.swapi.tech/api/vehicles")
+      .then(res => res.json())
+      .then(data => {
+        dispatch({
+          type: "SET_VEHICLES",
+          payload: data.results
+        });
+      });
+
+  }, []);
+
+  return (
+    <div className="container mt-4">
+
+     <h2 className="text-danger">Characters</h2>
+<div className="d-flex overflow-auto mb-4">
+  {store.people.map(person => (
+    <div key={person.uid} className="me-3" style={{ flex: "0 0 auto" }}>
+      <Card item={person} type="people" />
+    </div>
+  ))}
+</div>
+
+<h2 className="text-danger">Planets</h2>
+<div className="d-flex overflow-auto mb-4">
+  {store.planets.map(planet => (
+    <div key={planet.uid} className="me-3" style={{ flex: "0 0 auto" }}>
+      <Card item={planet} type="planets" />
+    </div>
+  ))}
+</div>
+
+<h2 className="text-danger">Vehicles</h2>
+<div className="d-flex overflow-auto">
+  {store.vehicles.map(vehicle => (
+    <div key={vehicle.uid} className="me-3" style={{ flex: "0 0 auto" }}>
+      <Card item={vehicle} type="vehicles" />
+    </div>
+  ))}
+</div>
+    </div>
+  );
+};
+
