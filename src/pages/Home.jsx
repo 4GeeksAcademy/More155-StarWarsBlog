@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Card } from "../components/Card.jsx";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
+import { ClipLoader } from "react-spinners";
 
 {/* Getting some 302 errors from time to time, lack of catch errors or async functions I guess, have to check that out DONE this got rid of 302 and 429 errors */}
 {/* LearnMore: Already added a catch: error and a spinner when loading */}
@@ -14,11 +15,12 @@ import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 export const Home = () => {
 
   const { store, dispatch } = useGlobalReducer();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
 
   const fetchPeople = async () => {
-    try {
+    try { setLoading(true) 
       const res = await fetch("https://www.swapi.tech/api/people");
 
       if (!res.ok) {
@@ -35,11 +37,13 @@ export const Home = () => {
 
     } catch (error) {
       console.log("People fetch failed:", error);
+    } finally {
+      setLoading(false)
     }
   };
 
   const fetchPlanets = async () => {
-    try {
+    try { setLoading(true) 
       const res = await fetch("https://www.swapi.tech/api/planets");
 
       if (!res.ok) {
@@ -56,11 +60,13 @@ export const Home = () => {
 
     } catch (error) {
       console.log("Planets fetch failed:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchVehicles = async () => {
-    try {
+    try { setLoading(true) 
       const res = await fetch("https://www.swapi.tech/api/vehicles");
 
       if (!res.ok) {
@@ -77,6 +83,8 @@ export const Home = () => {
 
     } catch (error) {
       console.log("Vehicles fetch failed:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -85,6 +93,18 @@ export const Home = () => {
   fetchVehicles();
 
 }, []);
+
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ height: "60vh" }}>
+        <ClipLoader
+          color="#c9a227" 
+          size={80}
+          aria-label="Loading Spinner"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="container mt-4">
