@@ -14,14 +14,14 @@ export const Navbar = () => {
   };
 
   return (
-    <nav className="navbar navbar-light bg-light px-4">
+    <nav className="navbar navbar-light bg-dark px-4">
       <Link to="/">
-        <span className="navbar-brand mb-0 h1">Star Wars Blog</span>
+        <span className="navbar-brand mb-0 h1 text-white">Star Wars Blog</span>
       </Link>
 
       <div className="dropdown">
         <button
-          className="btn btn-dark dropdown-toggle"
+          className="btn btn-danger dropdown-toggle"
           type="button"
           data-bs-toggle="dropdown"
         >
