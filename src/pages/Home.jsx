@@ -3,9 +3,7 @@ import { Card } from "../components/Card.jsx";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { ClipLoader } from "react-spinners"; 
 
-// 302, 429 errors - had to change the fetch logic in order to show details in Card component - Switch to showing only 6 details in LearnMore for better flow
-
-// Many 429 error in order to load, after adding the details in Card the data is not loading properly, I'll try with LocalStorage
+// LocalStorge fixed 429() errors 
 
 export const Home = () => {
 
@@ -14,144 +12,175 @@ export const Home = () => {
 
   useEffect(() => {
 
-    const fetchPeople = async () => {
-      try {
-        const res = await fetch("https://www.swapi.tech/api/people");
+  const fetchPeople = async () => {
+    try {
+      const savedPeople = localStorage.getItem("people");
 
-        if (!res.ok) {
-          console.log("People error status:", res.status);
-          return [];
-        }
+      // check if the item is already on the storage, parse JSON to turn into array
+      if (savedPeople) {
+        return JSON.parse(savedPeople);
+      }
 
-        const data = await res.json();
+      const res = await fetch("https://www.swapi.tech/api/people");
 
-        // To reduce more errors due to fetching too much data I reduced data using slice method
-
-        const detailedPeople = await Promise.all(
-          data.results.slice(0, 5).map(async (person) => {
-            try {
-              const detailRes = await fetch(person.url);
-
-              if (!detailRes.ok) return person;
-
-              const detailData = await detailRes.json();
-
-              return {
-                ...person,
-                ...detailData.result.properties
-              };
-
-            } catch {
-              return person;
-            }
-          })
-        );
-
-        return detailedPeople;
-
-      } catch (error) {
-        console.log("People fetch failed:", error);
+      if (!res.ok) {
+        console.log("People error status:", res.status);
         return [];
       }
-    }; 
 
-    const fetchPlanets = async () => {
-      try {
-        const res = await fetch("https://www.swapi.tech/api/planets");
+      const data = await res.json();
 
-        if (!res.ok) {
-          console.log("Planets error status:", res.status);
-          return [];
-        }
+      // Same slice, if it works, try to extend - promise all so ALL of it loads 
 
-        const data = await res.json();
+      const detailedPeople = await Promise.all(
+        data.results.slice(0, 5).map(async (person) => {
+          try {
+            const detailRes = await fetch(person.url);
 
-        const detailedPlanets = await Promise.all(
-          data.results.slice(0, 5).map(async (planet) => {
-            try {
-              const detailRes = await fetch(planet.url);
+            if (!detailRes.ok) return person;
 
-              if (!detailRes.ok) return planet;
+            const detailData = await detailRes.json();
 
-              const detailData = await detailRes.json();
+            return {
+              ...person,
+              ...detailData.result.properties
+            };
 
-              return {
-                ...planet,
-                ...detailData.result.properties
-              };
+          } catch {
+            return person;
+          }
+        })
+      );
 
-            } catch {
-              return planet;
-            }
-          })
-        );
+      // Set the item on storage
 
-        return detailedPlanets;
+      localStorage.setItem("people", JSON.stringify(detailedPeople));
 
-      } catch (error) {
-        console.log("Planets fetch failed:", error);
+      return detailedPeople;
+
+    } catch (error) {
+      console.log("People fetch failed:", error);
+      return [];
+    }
+  };
+
+  // planets
+
+  const fetchPlanets = async () => {
+    try {
+      const savedPlanets = localStorage.getItem("planets");
+
+      if (savedPlanets) {
+        return JSON.parse(savedPlanets);
+      }
+
+      const res = await fetch("https://www.swapi.tech/api/planets");
+
+      if (!res.ok) {
+        console.log("Planets error status:", res.status);
         return [];
       }
-    };
 
-    const fetchVehicles = async () => {
-      try {
-        const res = await fetch("https://www.swapi.tech/api/vehicles");
+      const data = await res.json();
 
-        if (!res.ok) {
-          console.log("Vehicles error status:", res.status);
-          return [];
-        }
+      const detailedPlanets = await Promise.all(
+        data.results.slice(0, 5).map(async (planet) => {
+          try {
+            const detailRes = await fetch(planet.url);
 
-        const data = await res.json();
+            if (!detailRes.ok) return planet;
 
-        const detailedVehicles = await Promise.all(
-          data.results.slice(0, 5).map(async (vehicle) => {
-            try {
-              const detailRes = await fetch(vehicle.url);
+            const detailData = await detailRes.json();
 
-              if (!detailRes.ok) return vehicle;
+            return {
+              ...planet,
+              ...detailData.result.properties
+            };
 
-              const detailData = await detailRes.json();
+          } catch {
+            return planet;
+          }
+        })
+      );
 
-              return {
-                ...vehicle,
-                ...detailData.result.properties
-              };
+      localStorage.setItem("planets", JSON.stringify(detailedPlanets));
 
-            } catch {
-              return vehicle;
-            }
-          })
-        );
+      return detailedPlanets;
 
-        return detailedVehicles;
+    } catch (error) {
+      console.log("Planets fetch failed:", error);
+      return [];
+    }
+  };
 
-      } catch (error) {
-        console.log("Vehicles fetch failed:", error);
+  // vehicles
+
+  const fetchVehicles = async () => {
+    try {
+      const savedVehicles = localStorage.getItem("vehicles");
+
+      if (savedVehicles) {
+        return JSON.parse(savedVehicles);
+      }
+
+      const res = await fetch("https://www.swapi.tech/api/vehicles");
+
+      if (!res.ok) {
+        console.log("Vehicles error status:", res.status);
         return [];
       }
-    };
-    
-    // Separated actions for better loading and organization
 
-    const loadData = async () => {
-      setLoading(true);
+      const data = await res.json();
 
-      const people = await fetchPeople();
-      const planets = await fetchPlanets();
-      const vehicles = await fetchVehicles();
+      const detailedVehicles = await Promise.all(
+        data.results.slice(0, 5).map(async (vehicle) => {
+          try {
+            const detailRes = await fetch(vehicle.url);
 
-      dispatch({ type: "SET_PEOPLE", payload: people });
-      dispatch({ type: "SET_PLANETS", payload: planets });
-      dispatch({ type: "SET_VEHICLES", payload: vehicles });
+            if (!detailRes.ok) return vehicle;
 
-      setLoading(false);
-    };
+            const detailData = await detailRes.json();
 
-    loadData();
+            return {
+              ...vehicle,
+              ...detailData.result.properties
+            };
 
-  }, []);
+          } catch {
+            return vehicle;
+          }
+        })
+      );
+
+      localStorage.setItem("vehicles", JSON.stringify(detailedVehicles));
+
+      return detailedVehicles;
+
+    } catch (error) {
+      console.log("Vehicles fetch failed:", error);
+      return [];
+    }
+  };
+
+  // Separated actions for better loading and organization
+
+  const loadData = async () => {
+    setLoading(true);
+
+    const people = await fetchPeople();
+    const planets = await fetchPlanets();
+    const vehicles = await fetchVehicles();
+
+    dispatch({ type: "SET_PEOPLE", payload: people });
+    dispatch({ type: "SET_PLANETS", payload: planets });
+    dispatch({ type: "SET_VEHICLES", payload: vehicles });
+
+    setLoading(false);
+  };
+
+  loadData();
+
+}, []);
 
 
   if (loading) {

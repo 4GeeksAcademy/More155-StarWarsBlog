@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 
 // I added a link to get access to LearnMore from the list
 
+// Add functionality to search bar, not sure how. Use state input set input plus and e target for the value OnChange ?, a handle change and how would i fetch the local storage? or just call item in general. Could use a OneKeyDown to sent u to the path on LearnMore
+
 export const Navbar = () => {
   const { store, dispatch } = useGlobalReducer();
 
@@ -14,14 +16,19 @@ export const Navbar = () => {
   };
 
   return (
-    <nav className="navbar navbar-light bg-light px-4">
+    <nav className="navbar navbar-light bg-dark px-4">
       <Link to="/">
-        <span className="navbar-brand mb-0 h1">Star Wars Blog</span>
+        <span className="navbar-brand mb-0 h1 text-white">Star Wars Blog</span>
       </Link>
+
+           <form className="d-flex" role="search">
+        <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+        <button className="btn btn-outline-danger" type="submit">Search</button>
+      </form>
 
       <div className="dropdown">
         <button
-          className="btn btn-dark dropdown-toggle"
+          className="btn btn-danger dropdown-toggle"
           type="button"
           data-bs-toggle="dropdown"
         >
