@@ -1,6 +1,8 @@
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import { Link } from "react-router-dom";
 
+// I added a link to get access to LearnMore from the list
+
 export const Navbar = () => {
   const { store, dispatch } = useGlobalReducer();
 
@@ -35,7 +37,7 @@ export const Navbar = () => {
                 key={fav.uid}
                 className="dropdown-item d-flex justify-content-between align-items-center text-primary"
               >
-                <Link to={`/more/${fav.type}/${fav.uid}`}>
+                <Link to={`/more/${fav.type}/${fav.uid}`}> 
                {fav.name}
              </Link> 
                 <i

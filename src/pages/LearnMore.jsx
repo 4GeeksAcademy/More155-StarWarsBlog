@@ -76,6 +76,29 @@ export const LearnMore = () => {
          </>
       )}
 
+         {type === "planets" && (
+        <>
+          <div className="col-md-2"><strong>Climate</strong><br />{details.climate}</div>
+          <div className="col-md-2"><strong>Terrain</strong><br />{details.terrain}</div>
+          <div className="col-md-2"><strong>Population</strong><br />{details.population}</div>
+          <div className="col-md-2"><strong>Diameter</strong><br />{details.diameter}</div>
+          <div className="col-md-2"><strong>Gravity</strong><br />{details.gravity}</div>
+          <div className="col-md-2"><strong>Population</strong><br />{details.population}</div>
+        </>
+      )}
+
+      {type === "vehicles" && (
+        <>
+          <div className="col-md-2"><strong>Model</strong><br />{details.model}</div>
+          <div className="col-md-2"><strong>Vehicle class</strong><br />{details.vehicle_class}</div>
+          <div className="col-md-2"><strong>Manufacturer</strong><br />{details.manufacturer}</div>
+          <div className="col-md-2"><strong>Cost</strong><br />{details.cost_in_credits}</div>
+          <div className="col-md-2"><strong>Crew</strong><br />{details.crew}</div>
+          <div className="col-md-2"><strong>Length</strong><br />{details.length}</div>
+        </>
+      )}
+
+      {/* 
       {type === "planets" && (
         <>
           <div className="col-md-3"><strong>Climate</strong><br />{details.climate}</div>
@@ -106,6 +129,7 @@ export const LearnMore = () => {
           <div className="col-md-3"><strong>Passengers</strong><br />{details.passengers}</div>
         </>
       )}
+        */}
     </div>
 
     </div>
