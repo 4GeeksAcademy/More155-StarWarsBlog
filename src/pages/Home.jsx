@@ -4,6 +4,7 @@ import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { ClipLoader } from "react-spinners"; 
 
 // LocalStorge fixed 429() errors 
+// Deleted slice to show more items
 
 export const Home = () => {
 
@@ -30,10 +31,10 @@ export const Home = () => {
 
       const data = await res.json();
 
-      // Same slice, if it works, try to extend - promise all so ALL of it loads 
+      // Same slice 0,5 , if it works, try to extend - promise all so ALL of it loads 
 
       const detailedPeople = await Promise.all(
-        data.results.slice(0, 5).map(async (person) => {
+        data.results.map(async (person) => {
           try {
             const detailRes = await fetch(person.url);
 
@@ -84,7 +85,7 @@ export const Home = () => {
       const data = await res.json();
 
       const detailedPlanets = await Promise.all(
-        data.results.slice(0, 5).map(async (planet) => {
+        data.results.map(async (planet) => {
           try {
             const detailRes = await fetch(planet.url);
 
@@ -133,7 +134,7 @@ export const Home = () => {
       const data = await res.json();
 
       const detailedVehicles = await Promise.all(
-        data.results.slice(0, 5).map(async (vehicle) => {
+        data.results.map(async (vehicle) => {
           try {
             const detailRes = await fetch(vehicle.url);
 
@@ -181,7 +182,6 @@ export const Home = () => {
   loadData();
 
 }, []);
-
 
   if (loading) {
     return (

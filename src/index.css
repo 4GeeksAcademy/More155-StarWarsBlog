@@ -9,3 +9,12 @@
 .learnmore .details-row {
   padding-top: 30px;
 }
+
+.search-list{
+  width: 220px;
+  text-align: center;
+  text-decoration: underline;
+  position: absolute;
+  z-index: 1000; 
+  border-radius: 10px;
+}

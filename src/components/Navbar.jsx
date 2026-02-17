@@ -1,12 +1,22 @@
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 // I added a link to get access to LearnMore from the list
 
-// Add functionality to search bar, not sure how. Use state input set input plus and e target for the value OnChange ?, a handle change and how would i fetch the local storage? or just call item in general. Could use a OneKeyDown to sent u to the path on LearnMore
-
 export const Navbar = () => {
   const { store, dispatch } = useGlobalReducer();
+  const [search, setSearch] = useState("");
+
+    const allItems = [
+    ...store.people.map(item => ({ ...item, type: "people" })),
+    ...store.planets.map(item => ({ ...item, type: "planets" })),
+    ...store.vehicles.map(item => ({ ...item, type: "vehicles" }))
+  ];
+
+  const filtered = allItems.filter(item =>
+  item.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   const removeFavorite = (uid, type) => {
     dispatch({
@@ -21,9 +31,22 @@ export const Navbar = () => {
         <span className="navbar-brand mb-0 h1 text-white">Star Wars Blog</span>
       </Link>
 
-           <form className="d-flex" role="search">
-        <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-        <button className="btn btn-outline-danger" type="submit">Search</button>
+           <form className="d-flex" role="search" onSubmit={(e) => e.preventDefault()}>
+        <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" value={search} onChange={(e) => setSearch(e.target.value)}/>
+             {search && (
+          <div className="position-absolute bg-white mt-5 shadow search-list">
+            {filtered.map(item => (
+              <Link
+                key={item.uid}
+                to={`/more/${item.type}/${item.uid}`}
+                className="dropdown-item text-primary"
+                onClick={() => setSearch("")}
+              >
+                {item.name}
+              </Link>
+            ))}
+          </div>
+          )}
       </form>
 
       <div className="dropdown">
